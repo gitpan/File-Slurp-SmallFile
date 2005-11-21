@@ -1,0 +1,22 @@
+File-Slurp-SmallFile
+
+Slurps a file, omitting blank lines.  In scalar context, only slurps
+the first non-blank line.  In list context, slurps each line into an
+array.  Each line is chomp'd and blank lines are ignored.
+
+INSTALLATION
+
+To install this module, run the following commands:
+
+    perl Makefile.PL
+    make
+    make test
+    make install
+
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2005 Jonathan Rockway
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
