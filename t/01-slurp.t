@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 #Copyright (c) 2005 Jonathan T. Rockway
 
-use Test::More tests=>8;
+use Test::More tests=>10;
 use File::Slurp::SmallFile qw(slurp);
 
 # let's try everything in scalar context first
@@ -10,6 +10,8 @@ is(slurp("t/test/blank_lines"), "this is the first line", "blank lines");
 is(slurp("t/test/complex"), "lots of blank lines before this", "blank lines");
 is(slurp("t/test/zero"),0,"zero");
 is(slurp("t/test/true"),"0 but true", "zero but true");
+is(slurp("t/test/all_blank_lines"),undef,"all blank lines");
+
 
 # ok, now in list context
 my @simple = ("this is the first line",
@@ -31,6 +33,8 @@ my @blank_lines = ("this is the first line",
 		   "seven",
 		  );
 
+my @all_blank_lines;
+
 my @complex = ("lots of blank lines before this",
 	       "leading",
 	       "trailing",
@@ -51,6 +55,9 @@ is_deeply(\@result, \@simple, "simple list context");
 
 @result = slurp("t/test/blank_lines");
 is_deeply(\@result, \@blank_lines, "blank lines in list context");
+
+@result = slurp("t/test/all_blank_lines");
+is_deeply(\@result, \@all_blank_lines, "all blank lines, in list context");
 
 @result = slurp("t/test/complex");
 is_deeply(\@result, \@complex, "testing complicated spacing stuff");

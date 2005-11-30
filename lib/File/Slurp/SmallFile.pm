@@ -13,11 +13,11 @@ File::Slurp::SmallFile - Slurps a file, omitting blank lines.
 
 =head1 VERSION
 
-Version 0.01
+Version 0.02
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 =head1 SYNOPSIS
 
@@ -42,7 +42,8 @@ as an argument to Exporter.
 =head2 slurp
 
 Reads chomped, non-blank lines from a file.  Returns the first in scalar
-context, or all of them in array context.
+context, or all of them in array context.  Returns undef if there were no
+lines to return.
 
 Dies if the file can't be opened.  See DIAGNOSTICS.
 
@@ -52,24 +53,36 @@ sub slurp {
     my $filename = shift;
     
     open my $file, '<', "$filename" or die "Couldn't open $filename: $!";
-    
-    my @lines = <$file>;
     my @result;
     
-    foreach my $line (@lines){
-	chomp $line;
-	$line =~ s/( ^\s+ | \s+$ )//gx;  # strip leading and trailing spaces
-	if ($line || $line eq "0"){
-	    if(!wantarray){
-		return $line;
-	    }
-	    push(@result, $line);
+    # get the first non-blank line in scalar context
+    if(!wantarray){
+	while(my $line = <$file>){
+	    $line = _fix_line($line);
+	    return $line if defined $line;
 	}
+	return;
     }
-
-    return @result;
+    
+    # get all non-blank lines, in array context
+    else {
+	while(my $line = <$file>){
+	    $line = _fix_line($line);
+	    push(@result, $line) if($line);
+	}
+	return @result;
+    }
+    
 }
 
+sub _fix_line {
+    my $line = shift;
+    $line =~ s/( ^\s+ | \s+$ )//gx; # strip leading and trailing spaces
+    if($line || $line eq "0"){
+	return $line;
+    }
+    return;
+}
 =head1 DIAGNOSTICS
 
 =head2 "Couldn't open $filename: $!"

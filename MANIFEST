@@ -8,6 +8,7 @@ t/00-load.t
 t/01-slurp.t
 t/test/simple
 t/test/blank_lines
+t/test/all_blank_lines
 t/test/complex
 t/test/zero
 t/test/true
